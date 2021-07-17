@@ -40,8 +40,8 @@
     },
     mounted(){
         this.$toast("My toast content", {
-    timeout: 2000
-});
+            timeout: 2000
+        });
     }
   }
 </script>
