@@ -12,12 +12,7 @@ const store = new Vuex.Store(
       accessToken: null,
       loggingIn: false,
       loginError: null,
-      username: null,
-      fullname: null,
-      email: null,
-      phone: null,
-      password: null,
-      accessLevel: null,
+      user: null,
     },
     mutations: {
       loginStart: state => state.loggingIn = true,
@@ -28,23 +23,8 @@ const store = new Vuex.Store(
       setAuthentication: (state, status) => {
         state.authenticated = status;
       },
-      setUsername: (state, name) => {
-        state.username = name;
-      },
-      setFullname: (state, fullname) => {
-        state.fullname = fullname;
-      },
-      setEmail: (state, email) => {
-        state.email = email;
-      },
-      setPhone: (state, phone) => {
-        state.phone = phone;
-      },
-      setPassword: (state, password) => {
-        state.password = password;
-      },
-      setAccessLevel: (state, level) => {
-        state.accessLevel = level;
+      setUser: (state, user) => {
+        state.user = user;
       },
       updateAccessToken: (state, accessToken) => {
         state.accessToken = accessToken;
@@ -52,11 +32,21 @@ const store = new Vuex.Store(
       logout: (state) => {
           state.authenticated = false
           state.accessToken = null
-          state.username = null
-          state.accessLevel = null
+          state.user = null
       }
     },
     actions: {
+        // updateMails({commit}){
+        //   axios.get('http://soft-desk.nl/backendv2/public/api/v1/allmails')
+        //   .then(response => {
+        //     console.log(response.data)
+        //     commit('setMails', response.data);
+        //     Vue.$toast('Mails have been updated');
+        //   })
+        //   .catch(() =>{
+        //     Vue.$toast('Network issues')
+        //   })
+        // },
         login({commit}, loginCredentials){
             commit('loginStart');
 
@@ -72,22 +62,16 @@ const store = new Vuex.Store(
 
                   commit('setAuthentication', true);
 
-                  commit('setUsername', data.username)
-                  commit('setFullname', data.fullname)
-                  commit('setPassword', data.password)
-                  commit('setEmail', data.email)
-                  commit('setPhone', data.phone)
-
-                  commit('setAccessLevel', data.level)
+                  commit('setUser', data.user)
                   
                   router.push('/dashboard');
 
-                  Vue.$toast(`Welcome: ${this.state.username}`);
+                  Vue.$toast(`Welcome: ${this.state.user.username}`);
                 }
                 else{
                   commit('loginStop', data.error)
 
-                  Vue.$toast.error(`${this.state.error}`);
+                  Vue.$toast.error(`${this.state.loginError}`);
                 }
             })
             .catch(err => {
@@ -95,7 +79,7 @@ const store = new Vuex.Store(
 
                 commit('updateAccessToken', null)
 
-                Vue.$toast.error(`${err}`);
+                Vue.$toast.error(`Caught error: ${err}`);
             })
         },
         logout({commit}){

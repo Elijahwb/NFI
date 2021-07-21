@@ -67,11 +67,11 @@ export default {
     data(){
         return {
             userInfo:{
-                email: this.$store.state.email,
-                password: this.$store.state.password,
-                fullname: this.$store.state.fullname,
-                username: this.$store.state.username,
-                phone: this.$store.state.phone,
+                email: this.$store.state.user.email,
+                password: this.$store.state.user.password,
+                fullname: this.$store.state.user.name,
+                username: this.$store.state.user.username,
+                phone: this.$store.state.user.phone,
             }
         }
     }

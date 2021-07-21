@@ -5,9 +5,13 @@
 </template>
 
 <script>
-
 export default {
   name: 'App',
+  mounted() {
+    // setInterval(function(){
+    //   store.dispatch('updateMails')
+    // }, 60000);
+  },
 }
 </script>
 

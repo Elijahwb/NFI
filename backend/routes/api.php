@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,27 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', function(Request $request){
-    if($request->email == 'email@gmail.com' && $request->password == 'pass'){
-        return response()->json(
-            [
-                'fullname' => 'Wavamuno Brandon Elijah',
-                'username' => 'Brandon',
-                'email' => 'brandon@gmail.com',
-                'phone' => '0753659098',
-                'password' => 'brandon093#_334',
-                'token' => '343kfke/dfdkfk#ero76_erke',
-                'level' => 3,
-            ]
-        );
-    }else{
-        return response()->json(
-            [
-                'error' => 'Wrong Credentials',
-            ]
-        );
-    }
-});
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/login', [AuthController::class, 'testLogin']);
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
