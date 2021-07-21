@@ -2,6 +2,7 @@
     <Mainframe>
         <div class="settings-wrapper">
             <div class="settings-content">
+            <Loader />
             <div class="title">
                 <div class="title-content">
                     <div class="avatar">
@@ -42,12 +43,15 @@
                 <tr>
                     <td class="highlight">Password:</td>
                     <td>
-                        <input class="form-control" type="text" v-model="userInfo.password">
+                        <div class="password form-control">
+                            <input class="" type="password" v-model="userInfo.password">
+                            <span class="visible" @click="toggleVisibility">show</span>
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <button>Save</button>
+                        <button @click="updateUserInfo">Save</button>
                     </td>
                 </tr>
             </table>
@@ -58,20 +62,42 @@
 
 <script>
 import Mainframe from '@/components/MainFrame.vue'
+import store from '../store'
 
 export default {
     name: "settings",
     components: {
-        Mainframe
+        Mainframe,
     },
     data(){
         return {
             userInfo:{
                 email: this.$store.state.user.email,
-                password: this.$store.state.user.password,
+                password: this.$store.state.user.pass,
                 fullname: this.$store.state.user.name,
                 username: this.$store.state.user.username,
                 phone: this.$store.state.user.phone,
+            }
+        }
+    },
+    methods: {
+        updateUserInfo(){
+            store.dispatch('updateUsernamePassword', {
+                'id': store.state.user.id,
+                'username': this.userInfo.username,
+                'password': this.userInfo.password,
+            })
+        },
+        toggleVisibility(){
+            let pass = document.querySelector('.password input');
+            let span = document.querySelector('.password span');
+            if(pass.type == 'password'){
+                pass.type = 'text'
+                span.textContent = 'hide'
+            }
+            else {
+                pass.type = 'password'
+                span.textContent = 'show'
             }
         }
     }
@@ -97,6 +123,27 @@ button {
     width: 260px;
     border: .5px solid rgba(0,0,0,.1);
     border-radius: 5px;
+}
+.password {
+    width: 260px;
+    border: .5px solid rgba(0,0,0,.1);
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+.password input {
+    border: none;
+}
+.password input:focus {
+    border:none;
+    outline: none;
+}
+.password span {
+    width: 32px;
+    color: #08248c;
+}
+.password .visible:hover {
+    cursor: pointer;
 }
 .title {
     display: flex;

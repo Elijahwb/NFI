@@ -15,7 +15,7 @@ Vue.use(BootstrapVue);
 Vue.use(Toast,{
   toastClassName: "custom-toast",
   closeOnClick: true,
-  timeout: 3000,
+  timeout: 2000,
 });
 Vue.use(VueAxios, axios);
 

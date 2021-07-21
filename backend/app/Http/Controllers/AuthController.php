@@ -25,8 +25,33 @@ class AuthController extends Controller
         }
 
         $response = [
+            'user' => $user,
+        ];
+
+        $response['user']['pass'] = $fields['password'];
+
+        return response()->json($response);
+    }
+
+    public function updateUsernamePassword(Request $request){
+        $fields = $request->validate([
+            'id' => 'required',
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        User::where('id', $fields['id'])->update([
+            'username' => $fields['username'],
+            'password' => Hash::make($fields['password']),
+        ]);
+
+        $user = User::find($fields['id']);
+
+        $response = [
             'user' => $user
         ];
+
+        $response['user']['pass'] = $fields['password'];
 
         return response()->json($response);
     }

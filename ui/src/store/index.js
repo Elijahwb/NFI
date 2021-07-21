@@ -8,6 +8,11 @@ Vue.use(Vuex);
 const store = new Vuex.Store(
   {
     state: {
+      endpoints: {
+        'dev': 'http://127.0.0.1:8000/ap/',
+        'prod': 'https://pacodasug.org/backend/public/api/'
+      },
+      loading: false,
       authenticated: false,
       accessToken: null,
       loggingIn: false,
@@ -15,6 +20,8 @@ const store = new Vuex.Store(
       user: null,
     },
     mutations: {
+      loadingStart: state => state.loading = true,
+      loadingStop: state => state.loading = false,
       loginStart: state => state.loggingIn = true,
       loginStop: (state, errorMessage) => {
         state.loggingIn = false;
@@ -47,15 +54,39 @@ const store = new Vuex.Store(
         //     Vue.$toast('Network issues')
         //   })
         // },
+        updateUsernamePassword({commit}, newUserInfo){
+          commit('loadingStart');
+
+          axios.post(`${this.state.endpoints.prod}updateusernamepassword`, {...newUserInfo})
+          .then(response => {
+            commit('loadingStop');
+            let data = response.data
+
+            console.log(data)
+
+            commit('setUser', data.user)
+
+            Vue.$toast(`User information updated!`);
+          })
+          .catch(err => {
+            commit('loadingStop')
+
+            Vue.$toast.error(`Caught error: ${err}`);
+          })
+        },
         login({commit}, loginCredentials){
             commit('loginStart');
+            commit('loadingStart');
 
-            axios.post('http://127.0.0.1:8000/api/login', {...loginCredentials})
+            axios.post(`${this.state.endpoints.prod}login`, {...loginCredentials})
 
             .then(response => {
                 commit('loginStop', null)
+                commit('loadingStop');
 
                 let data = response.data
+
+                console.log(data)
 
                 if(!data.error){
                   commit('updateAccessToken', data.token);
@@ -70,12 +101,14 @@ const store = new Vuex.Store(
                 }
                 else{
                   commit('loginStop', data.error)
+                  commit('loadingStop')
 
                   Vue.$toast.error(`${this.state.loginError}`);
                 }
             })
             .catch(err => {
                 commit('loginStop', err)
+                commit('loadingStop')
 
                 commit('updateAccessToken', null)
 

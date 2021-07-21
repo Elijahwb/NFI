@@ -1,5 +1,7 @@
 <template>
-    <div class="master-container">
+    <div>
+        <Loader v-if="this.$store.state.loading"/>
+        <div class="master-container">
         <div class="login-page-container">
         <div class="form-container"></div>
         <div class="login-overlay"></div>
@@ -34,11 +36,16 @@
         </div>
     </div>
     </div>
+    </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
+import Loader from '@/components/Loader.vue'
   export default {
+    components: {
+        Loader,
+    },
     data() {
       return {
         input: {

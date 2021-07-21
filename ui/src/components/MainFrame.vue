@@ -1,5 +1,7 @@
 <template>
-    <div class="app-container">
+    <div>
+        <Loader v-if="this.$store.state.loading"/>
+        <div class="app-container">
         <div class="side-nav">
             <div class="side-nav-content">
                 <div class="company">
@@ -164,25 +166,33 @@
             </div>
         </div>
     </div>
+    </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 import router from '../router'
+import Loader from '@/components/Loader.vue'
 
 export default {
    name: "mainframe",
+   components: {
+       Loader,
+   },
    mounted(){
        //notify the user when the search is active
        document.querySelector('.search input').addEventListener('focus', ()=>{
            document.querySelector('.search').classList.add('active-search')
+           //if the user is not on the borrowers view, then take him/her there
            if(this.$route.name != 'borrowers'){
                router.push('/borrowers')
            }
        })
+       //remove the active on the search when it is out of focus
        document.querySelector('.search input').addEventListener('focusout', ()=>{
            document.querySelector('.search').classList.remove('active-search')
        })
+       console.log(`Loading State from store ${this.$store.state.isLoading}`)
    },
    data(){
         return {
